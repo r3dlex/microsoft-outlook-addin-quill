@@ -1,0 +1,20 @@
+# @archgate/cli configuration
+# See: https://github.com/archgate/cli
+
+adr:
+  directory: docs/adr
+  template: docs/adr/template.md
+  pattern: "NNN-*.md"
+  id_prefix: "ADR-"
+
+validation:
+  require_status: true
+  allowed_statuses:
+    - Proposed
+    - Accepted
+    - Deprecated
+    - Superseded
+  require_sections:
+    - Context
+    - Decision
+    - Consequences
