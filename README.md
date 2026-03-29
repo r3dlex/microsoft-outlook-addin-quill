@@ -43,3 +43,19 @@ cd frontend && npm install && npm run dev
 | Storage | roamingSettings (synced), localStorage (local), customProperties (per-item) |
 | CORS Proxy | Cloudflare Worker (for providers without browser CORS) |
 | Pipelines | Python, Poetry, @archgate/cli |
+
+## Icon Assets
+
+All icon variations are generated from the source SVG and live in `frontend/public/assets/`.
+
+| File | Size | Purpose |
+|------|------|---------|
+| `logo.svg` | vector | Source logo, app header, VitePress |
+| `icon-16.png` | 16x16 | Outlook ribbon (small) |
+| `icon-32.png` | 32x32 | Outlook ribbon (medium), favicon |
+| `icon-64.png` | 64x64 | Outlook store listing |
+| `icon-80.png` | 80x80 | Outlook ribbon (large) |
+| `icon-128.png` | 128x128 | Outlook high-res icon |
+| `icon-256.png` | 256x256 | README, marketing |
+| `favicon.ico` | 16+32+48 | Browser tab |
+| `apple-touch-icon.png` | 180x180 | iOS home screen |

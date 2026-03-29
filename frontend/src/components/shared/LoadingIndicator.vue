@@ -1,14 +1,13 @@
 <script setup lang="ts">
-/**
- * LoadingIndicator shows a simple animated spinner.
- * Used during AI streaming responses and data loading operations.
- */
+withDefaults(defineProps<{ text?: string }>(), { text: 'Thinking...' });
 </script>
 
 <template>
   <div class="loading-indicator">
-    <div class="spinner" />
-    <span class="loading-text">Thinking...</span>
+    <div class="logo-spinner">
+      <img src="/logo.svg" alt="" class="spinner-logo" />
+    </div>
+    <span class="loading-text">{{ text }}</span>
   </div>
 </template>
 
@@ -20,18 +19,25 @@
   padding: var(--spacing-sm);
 }
 
-.spinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid var(--color-border);
-  border-top-color: var(--color-primary);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+.logo-spinner {
+  width: 20px;
+  height: 20px;
+  animation: pulse 1.2s ease-in-out infinite;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
+.spinner-logo {
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
   }
 }
 
