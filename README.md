@@ -1,6 +1,12 @@
-# Quill - AI Mail Assistant for Microsoft Outlook
+<p align="center">
+  <img src="frontend/public/logo.svg" alt="Quill Logo" width="128" height="128">
+</p>
 
-Pure client-side Outlook Add-in with multi-LLM support (Claude, OpenAI, Gemini, MiniMax). Vue 3 task pane, no backend server. LLM API calls made directly from the browser.
+<h1 align="center">Quill</h1>
+<p align="center"><strong>AI Mail Assistant for Microsoft Outlook</strong></p>
+<p align="center">Pure client-side Outlook Add-in with multi-LLM support (Claude, OpenAI, Gemini, MiniMax).<br>Vue 3 task pane, no backend server. LLM API calls made directly from the browser.</p>
+
+---
 
 ## Documentation
 

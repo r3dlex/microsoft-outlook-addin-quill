@@ -26,6 +26,10 @@ function isActive(path: string): boolean {
 
 <template>
   <div class="app-shell">
+    <header class="app-header">
+      <img src="/logo.svg" alt="Quill" class="app-logo" />
+      <span class="app-title">Quill</span>
+    </header>
     <nav class="tab-bar">
       <button
         v-for="tab in tabs"
@@ -48,6 +52,28 @@ function isActive(path: string): boolean {
   display: flex;
   flex-direction: column;
   height: 100%;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.app-logo {
+  width: 24px;
+  height: 24px;
+}
+
+.app-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: -0.3px;
 }
 
 .tab-bar {

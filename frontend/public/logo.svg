@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="feather-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0078d4"/>
+      <stop offset="50%" stop-color="#005a9e"/>
+      <stop offset="100%" stop-color="#003d6b"/>
+    </linearGradient>
+    <linearGradient id="tip-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffb900"/>
+      <stop offset="100%" stop-color="#f08c00"/>
+    </linearGradient>
+    <linearGradient id="spark-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#50e6ff"/>
+      <stop offset="100%" stop-color="#0078d4"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Quill feather body — elegant curved shape -->
+  <path d="M380 72c-20 8-42 24-62 48-28 34-54 80-72 132-18 52-28 108-26 156 1 16 3 30 6 44l8-4c24-14 50-38 72-70 22-32 40-70 50-108 10-38 14-74 12-104-1-20-4-36-8-48-6-18-14-30-24-38-8-6-16-10-24-10-4 0-8 0-12 2z"
+        fill="url(#feather-grad)" opacity="0.95"/>
+
+  <!-- Feather spine / rachis -->
+  <path d="M356 96c12 20 20 56 18 104-2 48-14 104-40 160-26 56-60 100-92 128"
+        stroke="#003d6b" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.5"/>
+
+  <!-- Left barbs -->
+  <g stroke="url(#feather-grad)" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.6">
+    <path d="M348 120c-30 4-62 20-90 46"/>
+    <path d="M352 160c-34 8-70 30-100 62"/>
+    <path d="M350 200c-36 10-74 36-106 76"/>
+    <path d="M344 244c-36 14-72 42-100 84"/>
+    <path d="M332 290c-32 16-62 44-86 84"/>
+    <path d="M314 336c-28 16-52 42-72 76"/>
+    <path d="M290 378c-22 16-42 38-56 64"/>
+  </g>
+
+  <!-- Right barbs -->
+  <g stroke="url(#feather-grad)" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.4">
+    <path d="M362 116c16 10 28 28 34 50"/>
+    <path d="M366 160c14 14 22 36 24 60"/>
+    <path d="M362 206c12 16 18 38 18 62"/>
+    <path d="M354 254c10 16 14 38 12 58"/>
+    <path d="M340 300c8 16 10 34 6 52"/>
+    <path d="M322 342c4 14 4 30 0 44"/>
+  </g>
+
+  <!-- Nib / pen tip -->
+  <path d="M242 488c-2-8-4-18-4-30 0-20 4-44 12-70l6 2c-4 28-4 54-2 74 0 10 2 18 4 24l-16 0z"
+        fill="url(#tip-grad)"/>
+
+  <!-- Ink drop -->
+  <ellipse cx="246" cy="496" rx="10" ry="6" fill="#003d6b" opacity="0.6"/>
+
+  <!-- AI sparkle — top right cluster -->
+  <g fill="url(#spark-grad)">
+    <!-- 4-point star 1 -->
+    <path d="M420 100l6-18 6 18 18 6-18 6-6 18-6-18-18-6 18-6z" opacity="0.9"/>
+    <!-- 4-point star 2 (smaller) -->
+    <path d="M460 60l4-12 4 12 12 4-12 4-4 12-4-12-12-4 12-4z" opacity="0.7"/>
+    <!-- 4-point star 3 (smallest) -->
+    <path d="M436 44l3-8 3 8 8 3-8 3-3 8-3-8-8-3 8-3z" opacity="0.5"/>
+  </g>
+
+  <!-- Small envelope silhouette at feather base -->
+  <g transform="translate(148, 408) scale(0.6)" opacity="0.35">
+    <rect x="0" y="8" width="60" height="40" rx="4" fill="#003d6b"/>
+    <path d="M0 12l30 20 30-20" stroke="#50e6ff" stroke-width="3" fill="none"/>
+  </g>
+</svg>

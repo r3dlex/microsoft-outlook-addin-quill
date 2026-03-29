@@ -4,6 +4,9 @@ hero:
   name: Quill
   text: Outlook Add-in Documentation
   tagline: AI-powered email assistant with automation capabilities
+  image:
+    src: /logo.svg
+    alt: Quill Logo
   actions:
     - theme: brand
       text: Getting Started
