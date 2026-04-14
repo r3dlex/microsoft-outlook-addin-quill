@@ -48,6 +48,10 @@ venv/
 htmlcov/
 poetry.lock
 
+# OMC state
+.omc/
+.omx/
+
 # OS
 .DS_Store
 Thumbs.db

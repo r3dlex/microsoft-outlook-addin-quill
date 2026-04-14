@@ -19,10 +19,15 @@ export default defineConfig({
   },
   test: {
     globals: true,
-    environment: 'jsdom',
+    environment: 'happy-dom',
+    setupFiles: ['./src/__tests__/setup.ts'],
+    include: ['src/**/__tests__/**/*.{js,ts,vue}'],
+    exclude: ['src/__tests__/setup.ts'],
     coverage: {
       provider: 'v8',
+      include: ['src/stores/**'],
       thresholds: {
+        perFile: true,
         lines: 75,
       },
     },

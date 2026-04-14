@@ -36,6 +36,13 @@ All notable changes to this project will be documented in this file.
 - `postcss.config.js` created with `tailwindcss` and `autoprefixer` plugins
 - `frontend/src/styles/quill-preset.ts` — custom PrimeVue 4 theme preset using `@primeuix/themes/aura` as base
 
+### Test Coverage
+- Vitest bootstrap: `happy-dom` environment, `src/__tests__/setup.ts` with localStorage mock and Pinia reset
+- `src/__tests__/stores/auth.test.ts` — 7 tests (100% lines)
+- `src/__tests__/stores/chat.test.ts` — 7 tests (98% lines)
+- `src/__tests__/stores/settings.test.ts` — 12 tests (100% lines)
+- Stores coverage: 99.38% lines (threshold: 75%)
+
 ## [0.1.0] - 2025-01-01
 
 ### Added
