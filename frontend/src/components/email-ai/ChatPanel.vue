@@ -5,9 +5,14 @@ import { useOffice } from '@/composables/useOffice';
 import ChatMessage from '@/components/shared/ChatMessage.vue';
 import ProviderSelector from '@/components/shared/ProviderSelector.vue';
 import LoadingIndicator from '@/components/shared/LoadingIndicator.vue';
+import Textarea from 'primevue/textarea';
+import Button from 'primevue/button';
+import Toast from 'primevue/toast';
+import { useToast } from 'primevue/usetoast';
 
 const chat = useChat();
 const office = useOffice();
+const toast = useToast();
 const inputText = ref<string>('');
 const messagesContainer = ref<HTMLElement | null>(null);
 
@@ -15,7 +20,6 @@ function handleSend(): void {
   const text = inputText.value.trim();
   if (!text || chat.isStreaming.value) return;
 
-  // Build a system prompt with email context if available
   let systemPrompt: string | undefined;
   if (office.subject.value || office.body.value) {
     systemPrompt = `You are Quill, an AI email assistant embedded in Microsoft Outlook.
@@ -43,6 +47,21 @@ function handleClear(): void {
   chat.clearMessages();
 }
 
+// Show error in Toast when chat.error changes
+watch(
+  () => chat.error.value,
+  (error) => {
+    if (error) {
+      toast.add({
+        severity: 'error',
+        summary: 'Chat Error',
+        detail: error,
+        life: 5000,
+      });
+    }
+  },
+);
+
 // Auto-scroll to bottom when new messages arrive
 watch(
   () => chat.messages.value.length,
@@ -57,19 +76,26 @@ watch(
 
 <template>
   <div class="chat-panel">
+    <Toast />
     <div class="chat-header">
       <ProviderSelector />
-      <button
+      <Button
         v-if="chat.messages.value.length > 0"
-        class="clear-button"
+        label="Clear"
+        severity="secondary"
+        size="small"
         @click="handleClear"
-      >
-        Clear
-      </button>
+      />
     </div>
 
-    <div ref="messagesContainer" class="messages-list">
-      <div v-if="chat.messages.value.length === 0" class="empty-state">
+    <div
+      ref="messagesContainer"
+      class="messages-list"
+    >
+      <div
+        v-if="chat.messages.value.length === 0"
+        class="empty-state"
+      >
         <p>Ask Quill about this email. You can request summaries, draft replies, or extract information.</p>
       </div>
       <ChatMessage
@@ -82,34 +108,27 @@ watch(
       <LoadingIndicator v-if="chat.isStreaming.value" />
     </div>
 
-    <div v-if="chat.error.value" class="chat-error">
-      {{ chat.error.value }}
-    </div>
-
     <div class="chat-input-area">
-      <textarea
+      <Textarea
         v-model="inputText"
         class="chat-input"
         placeholder="Ask about this email..."
-        rows="2"
+        :rows="2"
         @keydown="handleKeydown"
       />
       <div class="input-actions">
-        <button
+        <Button
           v-if="chat.isStreaming.value"
-          class="cancel-button"
+          label="Stop"
+          severity="danger"
           @click="chat.cancelStream"
-        >
-          Stop
-        </button>
-        <button
+        />
+        <Button
           v-else
-          class="send-button"
+          label="Send"
           :disabled="!inputText.trim()"
           @click="handleSend"
-        >
-          Send
-        </button>
+        />
       </div>
     </div>
   </div>
@@ -128,21 +147,6 @@ watch(
   justify-content: space-between;
   padding: var(--spacing-sm) var(--spacing-md);
   border-bottom: 1px solid var(--color-border);
-}
-
-.clear-button {
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-bg);
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--color-text-secondary);
-  cursor: pointer;
-}
-
-.clear-button:hover {
-  background: var(--color-bg-secondary);
 }
 
 .messages-list {
@@ -165,13 +169,6 @@ watch(
   padding: var(--spacing-lg);
 }
 
-.chat-error {
-  padding: var(--spacing-xs) var(--spacing-md);
-  background-color: #fde7e9;
-  color: var(--color-error);
-  font-size: 12px;
-}
-
 .chat-input-area {
   display: flex;
   gap: var(--spacing-sm);
@@ -183,16 +180,6 @@ watch(
 .chat-input {
   flex: 1;
   resize: none;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  padding: var(--spacing-sm);
-  font-size: 13px;
-  line-height: 1.4;
-  outline: none;
-}
-
-.chat-input:focus {
-  border-color: var(--color-primary);
 }
 
 .input-actions {
@@ -201,36 +188,7 @@ watch(
   justify-content: flex-end;
 }
 
-.send-button,
-.cancel-button {
-  padding: var(--spacing-sm) var(--spacing-md);
-  border: none;
-  border-radius: var(--radius-sm);
-  font-weight: 600;
+:deep(.p-inputtextarea) {
   font-size: 13px;
-  cursor: pointer;
-}
-
-.send-button {
-  background-color: var(--color-primary);
-  color: #fff;
-}
-
-.send-button:hover:not(:disabled) {
-  background-color: var(--color-primary-hover);
-}
-
-.send-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.cancel-button {
-  background-color: var(--color-error);
-  color: #fff;
-}
-
-.cancel-button:hover {
-  opacity: 0.9;
 }
 </style>

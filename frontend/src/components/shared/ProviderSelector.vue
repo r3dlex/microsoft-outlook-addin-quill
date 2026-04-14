@@ -2,22 +2,17 @@
 import { useChatStore } from '@/stores/chat';
 import { getAllProviders } from '@/services/llm/router';
 import type { ProviderName } from '@/services/llm/provider';
+import Select from 'primevue/select';
 
-/**
- * ProviderSelector is a compact dropdown for quickly switching the
- * AI provider within the chat interface. Appears in the ChatPanel header.
- */
 const chatStore = useChatStore();
 const providers = getAllProviders();
 
-function onProviderChange(event: Event): void {
-  const target = event.target as HTMLSelectElement;
-  chatStore.setProvider(target.value as ProviderName);
+function onProviderChange(value: ProviderName): void {
+  chatStore.setProvider(value);
 }
 
-function onModelChange(event: Event): void {
-  const target = event.target as HTMLSelectElement;
-  chatStore.setModel(target.value);
+function onModelChange(event: { value: string }): void {
+  chatStore.setModel(event.value);
 }
 
 function currentProviderModels(): string[] {
@@ -28,33 +23,22 @@ function currentProviderModels(): string[] {
 
 <template>
   <div class="provider-selector">
-    <select
+    <Select
+      :model-value="chatStore.currentProvider"
+      :options="providers"
+      option-label="displayName"
+      option-value="name"
+      placeholder="Provider"
       class="selector-dropdown"
-      :value="chatStore.currentProvider"
-      @change="onProviderChange"
-    >
-      <option
-        v-for="provider in providers"
-        :key="provider.name"
-        :value="provider.name"
-      >
-        {{ provider.displayName }}
-      </option>
-    </select>
-    <select
+      @update:model-value="onProviderChange"
+    />
+    <Select
+      :model-value="chatStore.currentModel"
+      :options="currentProviderModels()"
+      placeholder="Model"
       class="selector-dropdown model-dropdown"
-      :value="chatStore.currentModel"
-      @change="onModelChange"
-    >
-      <option value="">Default</option>
-      <option
-        v-for="model in currentProviderModels()"
-        :key="model"
-        :value="model"
-      >
-        {{ model }}
-      </option>
-    </select>
+      @update:model-value="onModelChange"
+    />
   </div>
 </template>
 
@@ -65,17 +49,8 @@ function currentProviderModels(): string[] {
   gap: var(--spacing-xs);
 }
 
-.selector-dropdown {
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
+:deep(.selector-dropdown) {
   font-size: 12px;
-  background: var(--color-bg);
-  outline: none;
-}
-
-.selector-dropdown:focus {
-  border-color: var(--color-primary);
 }
 
 .model-dropdown {

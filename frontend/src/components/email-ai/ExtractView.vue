@@ -8,7 +8,9 @@
 
 <template>
   <div class="extract-view">
-    <h3 class="section-title">Data Extraction</h3>
+    <h3 class="section-title">
+      Data Extraction
+    </h3>
     <p class="section-description">
       Extract structured information from the current email: dates, addresses,
       amounts, tracking numbers, and other key data points.

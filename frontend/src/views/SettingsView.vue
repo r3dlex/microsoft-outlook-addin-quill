@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import ProviderConfig from '@/components/settings/ProviderConfig.vue';
+import Card from 'primevue/card';
 </script>
 
 <template>
   <div class="settings-view">
-    <h2 class="view-title">Settings</h2>
+    <h2 class="view-title">
+      Settings
+    </h2>
     <p class="view-description">
       Configure your AI providers, API keys, and model preferences.
     </p>
@@ -12,14 +15,24 @@ import ProviderConfig from '@/components/settings/ProviderConfig.vue';
       <ProviderConfig />
     </div>
 
-    <footer class="about-section">
-      <img src="/logo.svg" alt="Quill" class="about-logo" />
-      <div class="about-text">
-        <span class="about-name">Quill</span>
-        <span class="about-version">v1.0.0</span>
-      </div>
-      <p class="about-tagline">AI Mail Assistant for Microsoft Outlook</p>
-    </footer>
+    <Card class="about-section">
+      <template #content>
+        <div class="about-content">
+          <img
+            src="/logo.svg"
+            alt="Quill"
+            class="about-logo"
+          >
+          <div class="about-text">
+            <span class="about-name">Quill</span>
+            <span class="about-version">v1.0.0</span>
+          </div>
+          <p class="about-tagline">
+            AI Mail Assistant for Microsoft Outlook
+          </p>
+        </div>
+      </template>
+    </Card>
   </div>
 </template>
 
@@ -52,8 +65,9 @@ import ProviderConfig from '@/components/settings/ProviderConfig.vue';
 
 .about-section {
   margin-top: var(--spacing-lg);
-  padding-top: var(--spacing-md);
-  border-top: 1px solid var(--color-border);
+}
+
+.about-content {
   display: flex;
   flex-direction: column;
   align-items: center;

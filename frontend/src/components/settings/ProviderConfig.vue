@@ -4,21 +4,22 @@ import { useSettings } from '@/composables/useSettings';
 import { useAuth } from '@/composables/useAuth';
 import { getAllProviders } from '@/services/llm/router';
 import type { ProviderName } from '@/services/llm/provider';
+import Password from 'primevue/password';
+import Select from 'primevue/select';
+import Button from 'primevue/button';
+import Accordion from 'primevue/accordion';
+import AccordionPanel from 'primevue/accordionpanel';
+import AccordionHeader from 'primevue/accordionheader';
+import AccordionContent from 'primevue/accordioncontent';
+import Tag from 'primevue/tag';
 
-/**
- * ProviderConfig is the main settings component.
- * Provides passphrase entry, per-provider API key input with save/test buttons,
- * and default model selection per provider.
- */
 const settings = useSettings();
 const auth = useAuth();
-
 const providers = getAllProviders();
 
 const passphrase = ref<string>('');
 const passphraseError = ref<string>('');
 
-// Per-provider state
 const providerState = reactive<
   Record<string, {
     apiKeyInput: string;
@@ -29,7 +30,6 @@ const providerState = reactive<
   }>
 >({});
 
-// Initialize provider state
 for (const p of providers) {
   providerState[p.name] = {
     apiKeyInput: '',
@@ -109,8 +109,8 @@ function selectProvider(providerName: ProviderName): void {
   settings.setProvider(providerName);
 }
 
-function selectModel(providerName: ProviderName, model: string): void {
-  settings.setDefaultModel(providerName, model);
+function selectModel(providerName: ProviderName, event: { value: string }): void {
+  settings.setDefaultModel(providerName, event.value);
 }
 </script>
 
@@ -118,130 +118,159 @@ function selectModel(providerName: ProviderName, model: string): void {
   <div class="provider-config">
     <!-- Passphrase Section -->
     <div class="section">
-      <h3 class="section-title">Passphrase</h3>
+      <h3 class="section-title">
+        Passphrase
+      </h3>
       <p class="section-description">
         Enter a passphrase to encrypt your API keys. Keys are stored locally
         in your Outlook roaming settings, encrypted with AES-256-GCM.
       </p>
-      <div v-if="!auth.isUnlocked.value" class="passphrase-form">
-        <input
+      <div
+        v-if="!auth.isUnlocked.value"
+        class="passphrase-form"
+      >
+        <Password
           v-model="passphrase"
-          type="password"
           class="field-input"
           placeholder="Enter passphrase to unlock"
+          :feedback="false"
+          toggle-mask
           @keydown.enter="handleUnlock"
         />
-        <button
-          class="action-button primary"
+        <Button
+          label="Unlock"
           :disabled="!passphrase || auth.isAuthenticating.value"
           @click="handleUnlock"
+        />
+        <div
+          v-if="passphraseError"
+          class="message error"
         >
-          {{ auth.isAuthenticating.value ? 'Unlocking...' : 'Unlock' }}
-        </button>
-        <div v-if="passphraseError" class="message error">{{ passphraseError }}</div>
+          {{ passphraseError }}
+        </div>
       </div>
-      <div v-else class="passphrase-unlocked">
-        <span class="unlocked-badge">Unlocked</span>
-        <button class="action-button" @click="handleLock">Lock</button>
+      <div
+        v-else
+        class="passphrase-unlocked"
+      >
+        <Tag
+          value="Unlocked"
+          severity="success"
+        />
+        <Button
+          label="Lock"
+          severity="secondary"
+          size="small"
+          @click="handleLock"
+        />
       </div>
     </div>
 
     <!-- Provider Settings -->
     <div class="section">
-      <h3 class="section-title">AI Providers</h3>
+      <h3 class="section-title">
+        AI Providers
+      </h3>
       <p class="section-description">
         Configure API keys and select default models for each provider.
-        Select your preferred default provider below.
       </p>
 
-      <div class="provider-list">
-        <div
+      <Accordion>
+        <AccordionPanel
           v-for="provider in providers"
           :key="provider.name"
-          class="provider-card"
-          :class="{ selected: settings.currentProvider.value === provider.name }"
+          :value="provider.name"
         >
-          <div class="provider-header" @click="selectProvider(provider.name)">
-            <span class="provider-label">{{ provider.displayName }}</span>
-            <span
-              v-if="settings.hasKey(provider.name)"
-              class="key-badge"
-            >Key saved</span>
-            <span
-              v-if="settings.currentProvider.value === provider.name"
-              class="default-badge"
-            >Default</span>
-          </div>
-
-          <div v-if="auth.isUnlocked.value" class="provider-body">
-            <!-- Model Selection -->
-            <div class="form-field">
-              <label class="field-label">Default Model</label>
-              <select
-                class="field-select"
-                :value="settings.providerSettings.value[provider.name]?.defaultModel"
-                @change="selectModel(provider.name, ($event.target as HTMLSelectElement).value)"
+          <AccordionHeader>
+            <div class="provider-header-row">
+              <span
+                class="provider-label"
+                :class="{ selected: settings.currentProvider.value === provider.name }"
+                @click="selectProvider(provider.name)"
               >
-                <option
-                  v-for="model in provider.availableModels"
-                  :key="model"
-                  :value="model"
-                >
-                  {{ model }}
-                </option>
-              </select>
-            </div>
-
-            <!-- API Key Input -->
-            <div class="form-field">
-              <label class="field-label">API Key</label>
-              <div class="key-input-row">
-                <input
-                  v-model="providerState[provider.name].apiKeyInput"
-                  type="password"
-                  class="field-input"
-                  :placeholder="settings.hasKey(provider.name) ? '(key saved - enter new to replace)' : 'Enter API key'"
+                {{ provider.displayName }}
+              </span>
+              <div class="provider-badges">
+                <Tag
+                  v-if="settings.hasKey(provider.name)"
+                  value="Key saved"
+                  severity="success"
                 />
-                <button
-                  class="action-button primary"
-                  :disabled="!providerState[provider.name].apiKeyInput.trim() || providerState[provider.name].isSaving"
-                  @click="saveKey(provider.name)"
-                >
-                  {{ providerState[provider.name].isSaving ? '...' : 'Save' }}
-                </button>
+                <Tag
+                  v-if="settings.currentProvider.value === provider.name"
+                  value="Default"
+                  severity="info"
+                />
               </div>
             </div>
-
-            <!-- Action Buttons -->
-            <div class="provider-actions">
-              <button
-                v-if="settings.hasKey(provider.name)"
-                class="action-button"
-                :disabled="providerState[provider.name].isTesting"
-                @click="testKey(provider.name)"
-              >
-                {{ providerState[provider.name].isTesting ? 'Testing...' : 'Test Connection' }}
-              </button>
-              <button
-                v-if="settings.hasKey(provider.name)"
-                class="action-button danger"
-                @click="removeKey(provider.name)"
-              >
-                Remove Key
-              </button>
-            </div>
-
-            <!-- Status Message -->
+          </AccordionHeader>
+          <AccordionContent>
             <div
-              v-if="providerState[provider.name].message"
-              class="message"
-              :class="providerState[provider.name].messageType"
+              v-if="auth.isUnlocked.value"
+              class="provider-body"
             >
-              {{ providerState[provider.name].message }}
+              <!-- Model Selection -->
+              <div class="form-field">
+                <label class="field-label">Default Model</label>
+                <Select
+                  :model-value="settings.providerSettings.value[provider.name]?.defaultModel"
+                  :options="provider.availableModels"
+                  placeholder="Select model"
+                  class="field-select"
+                  @update:model-value="(val) => selectModel(provider.name, { value: val })"
+                />
+              </div>
+
+              <!-- API Key Input -->
+              <div class="form-field">
+                <label class="field-label">API Key</label>
+                <div class="key-input-row">
+                  <Password
+                    v-model="providerState[provider.name].apiKeyInput"
+                    class="field-input"
+                    :placeholder="settings.hasKey(provider.name) ? '(key saved - enter new to replace)' : 'Enter API key'"
+                    :feedback="false"
+                    toggle-mask
+                  />
+                  <Button
+                    label="Save"
+                    :disabled="!providerState[provider.name].apiKeyInput.trim() || providerState[provider.name].isSaving"
+                    @click="saveKey(provider.name)"
+                  />
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="provider-actions">
+                <Button
+                  v-if="settings.hasKey(provider.name)"
+                  label="Test Connection"
+                  severity="secondary"
+                  size="small"
+                  :loading="providerState[provider.name].isTesting"
+                  @click="testKey(provider.name)"
+                />
+                <Button
+                  v-if="settings.hasKey(provider.name)"
+                  label="Remove Key"
+                  severity="danger"
+                  size="small"
+                  @click="removeKey(provider.name)"
+                />
+              </div>
+
+              <!-- Status Message -->
+              <div
+                v-if="providerState[provider.name].message"
+                class="message"
+                :class="providerState[provider.name].messageType"
+              >
+                {{ providerState[provider.name].message }}
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
+          </AccordionContent>
+        </AccordionPanel>
+      </Accordion>
     </div>
   </div>
 </template>
@@ -282,75 +311,29 @@ function selectModel(providerName: ProviderName, model: string): void {
   gap: var(--spacing-sm);
 }
 
-.unlocked-badge {
-  padding: 2px 8px;
-  background: #e6f4ea;
-  color: #1e7e34;
-  border-radius: var(--radius-sm);
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.provider-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-}
-
-.provider-card {
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-}
-
-.provider-card.selected {
-  border-color: var(--color-primary);
-}
-
-.provider-header {
+.provider-header-row {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-sm) var(--spacing-md);
-  cursor: pointer;
-  background: var(--color-bg);
+  justify-content: space-between;
+  width: 100%;
 }
 
-.provider-card.selected .provider-header {
-  background: #f0f6ff;
-}
-
-.provider-header:hover {
-  background: var(--color-bg-secondary);
+.provider-badges {
+  display: flex;
+  gap: var(--spacing-xs);
 }
 
 .provider-label {
   font-weight: 600;
   font-size: 13px;
-  flex: 1;
+  cursor: pointer;
 }
 
-.key-badge {
-  padding: 1px 6px;
-  background: #e6f4ea;
-  color: #1e7e34;
-  border-radius: var(--radius-sm);
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.default-badge {
-  padding: 1px 6px;
-  background: #e8f0fe;
+.provider-label.selected {
   color: var(--color-primary);
-  border-radius: var(--radius-sm);
-  font-size: 11px;
-  font-weight: 600;
 }
 
 .provider-body {
-  padding: var(--spacing-sm) var(--spacing-md) var(--spacing-md);
-  border-top: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
@@ -370,16 +353,7 @@ function selectModel(providerName: ProviderName, model: string): void {
 
 .field-input,
 .field-select {
-  padding: var(--spacing-sm);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  outline: none;
-  font-size: 13px;
-}
-
-.field-input:focus,
-.field-select:focus {
-  border-color: var(--color-primary);
+  width: 100%;
 }
 
 .key-input-row {
@@ -396,44 +370,6 @@ function selectModel(providerName: ProviderName, model: string): void {
   gap: var(--spacing-sm);
 }
 
-.action-button {
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-bg);
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.action-button:hover:not(:disabled) {
-  background: var(--color-bg-secondary);
-}
-
-.action-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.action-button.primary {
-  background: var(--color-primary);
-  color: #fff;
-  border-color: var(--color-primary);
-}
-
-.action-button.primary:hover:not(:disabled) {
-  background: var(--color-primary-hover);
-}
-
-.action-button.danger {
-  color: var(--color-error);
-  border-color: var(--color-error);
-}
-
-.action-button.danger:hover:not(:disabled) {
-  background: #fde7e9;
-}
-
 .message {
   font-size: 12px;
   padding: var(--spacing-xs) var(--spacing-sm);
@@ -448,5 +384,9 @@ function selectModel(providerName: ProviderName, model: string): void {
 .message.error {
   background: #fde7e9;
   color: var(--color-error);
+}
+
+:deep(.p-accordioncontent-content) {
+  padding: var(--spacing-md);
 }
 </style>

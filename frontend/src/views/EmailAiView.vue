@@ -1,22 +1,43 @@
 <script setup lang="ts">
 import ChatPanel from '@/components/email-ai/ChatPanel.vue';
 import { useOffice } from '@/composables/useOffice';
+import Panel from 'primevue/panel';
+import Tag from 'primevue/tag';
 
 const office = useOffice();
 </script>
 
 <template>
   <div class="email-ai-view">
-    <div v-if="office.isLoading.value" class="context-loading">
-      Loading email context...
-    </div>
-    <div v-else-if="office.error.value" class="context-error">
+    <Panel
+      v-if="office.isLoading.value"
+      class="context-loading"
+    >
+      <template #header>
+        Loading email context...
+      </template>
+    </Panel>
+    <Panel
+      v-else-if="office.error.value"
+      class="context-error"
+    >
+      <template #header>
+        Error
+      </template>
       {{ office.error.value }}
-    </div>
-    <div v-else class="email-context">
-      <div class="email-subject">{{ office.subject.value || 'No email selected' }}</div>
-      <div class="email-from">{{ office.from.value }}</div>
-    </div>
+    </Panel>
+    <Panel
+      v-else
+      class="email-context"
+    >
+      <template #header>
+        <Tag
+          :value="office.subject.value || 'No email selected'"
+          severity="info"
+        />
+      </template>
+      <span class="email-from">{{ office.from.value }}</span>
+    </Panel>
     <ChatPanel class="chat-section" />
   </div>
 </template>
@@ -44,14 +65,6 @@ const office = useOffice();
   padding: var(--spacing-sm) var(--spacing-md);
   border-bottom: 1px solid var(--color-border);
   background: var(--color-bg-secondary);
-}
-
-.email-subject {
-  font-weight: 600;
-  font-size: 13px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .email-from {

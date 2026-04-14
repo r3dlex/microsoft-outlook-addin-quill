@@ -36,7 +36,8 @@ cd frontend && npm install && npm run dev
 
 | Layer | Technology |
 |-------|-----------|
-| Frontend | Vue 3, Vite, TypeScript, Pinia, VitePress |
+| Frontend | Vue 3, Vite, TypeScript, Pinia, VitePress, PrimeVue v4 |
+| Styling | Tailwind CSS v4 (CSS-first config), CSS custom properties |
 | Office Integration | Office.js (read/compose email, categories, multi-select) |
 | AI Providers | Claude, OpenAI, Gemini, MiniMax (direct HTTPS fetch) |
 | Encryption | Web Crypto API (AES-256-GCM, PBKDF2) |

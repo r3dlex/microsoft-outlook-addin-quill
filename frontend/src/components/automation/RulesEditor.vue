@@ -1,43 +1,35 @@
 <script setup lang="ts">
-/**
- * RulesEditor allows users to create and manage automation rules.
- * Rules define conditions (sender, subject, content patterns) and
- * actions (move, label, forward, auto-reply) that can be applied
- * to incoming or existing emails.
- */
+import Button from 'primevue/button';
+import Card from 'primevue/card';
 </script>
 
 <template>
-  <div class="rules-editor">
-    <h3 class="section-title">Automation Rules</h3>
-    <p class="section-description">
-      Create rules to automatically organize, label, or process emails
-      based on sender, subject, content, and other criteria.
-    </p>
-    <div class="placeholder-content">
-      <p>No rules configured yet.</p>
-      <button class="add-rule-button">Create New Rule</button>
-    </div>
-  </div>
+  <Card class="rules-editor">
+    <template #title>
+      <h3 class="section-title">
+        Automation Rules
+      </h3>
+    </template>
+    <template #subtitle>
+      Create rules to automatically organize emails.
+    </template>
+    <template #content>
+      <div class="placeholder-content">
+        <p>No rules configured yet.</p>
+        <Button
+          label="Create New Rule"
+          class="add-rule-button"
+        />
+      </div>
+    </template>
+  </Card>
 </template>
 
 <style scoped>
-.rules-editor {
-  padding: var(--spacing-md);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-}
-
 .section-title {
   font-size: 15px;
   font-weight: 600;
-  margin-bottom: var(--spacing-xs);
-}
-
-.section-description {
-  font-size: 12px;
-  color: var(--color-text-secondary);
-  margin-bottom: var(--spacing-md);
+  margin: 0;
 }
 
 .placeholder-content {
@@ -49,14 +41,7 @@
   text-align: center;
 }
 
-.add-rule-button {
+:deep(.add-rule-button) {
   margin-top: var(--spacing-sm);
-  padding: var(--spacing-sm) var(--spacing-md);
-  background-color: var(--color-primary);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-weight: 600;
-  font-size: 13px;
 }
 </style>

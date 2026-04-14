@@ -8,7 +8,9 @@
 
 <template>
   <div class="summary-view">
-    <h3 class="section-title">Email Summary</h3>
+    <h3 class="section-title">
+      Email Summary
+    </h3>
     <p class="section-description">
       AI-generated summary of the current email, highlighting key points,
       action items, and important dates.

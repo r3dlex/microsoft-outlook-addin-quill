@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import Message from 'primevue/message';
 import type { MessageRole } from '@/stores/chat';
 
 const props = defineProps<{
@@ -15,60 +16,44 @@ const formattedTime = computed(() => {
 
 const roleLabel = computed(() => {
   switch (props.role) {
-    case 'user':
-      return 'You';
-    case 'assistant':
-      return 'Quill';
-    case 'system':
-      return 'System';
-    default:
-      return props.role;
+    case 'user': return 'You';
+    case 'assistant': return 'Quill';
+    case 'system': return 'System';
+    default: return props.role;
+  }
+});
+
+/** PrimeVue severity: info=user, secondary=assistant, warn=system */
+const severity = computed(() => {
+  switch (props.role) {
+    case 'user': return 'info';
+    case 'assistant': return 'secondary';
+    case 'system': return 'warn';
+    default: return 'info';
   }
 });
 </script>
 
 <template>
-  <div class="chat-message" :class="[`role-${role}`]">
+  <Message
+    :severity="severity"
+    :closable="false"
+  >
     <div class="message-header">
       <span class="message-role">{{ roleLabel }}</span>
       <span class="message-time">{{ formattedTime }}</span>
     </div>
-    <div class="message-content">
-      {{ content }}
-    </div>
-  </div>
+    <span class="message-content">{{ content }}</span>
+  </Message>
 </template>
 
 <style scoped>
-.chat-message {
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--radius-md);
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-.role-user {
-  background: #e8f0fe;
-  align-self: flex-end;
-  margin-left: var(--spacing-lg);
-}
-
-.role-assistant {
-  background: var(--color-bg-secondary);
-  align-self: flex-start;
-  margin-right: var(--spacing-lg);
-}
-
-.role-system {
-  background: #fff8e1;
-  align-self: center;
-  font-style: italic;
-}
-
 .message-header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: var(--spacing-xs);
+  align-items: center;
+  gap: var(--spacing-sm);
+  width: 100%;
 }
 
 .message-role {

@@ -9,7 +9,9 @@
 
 <template>
   <div class="reply-draft">
-    <h3 class="section-title">Reply Draft</h3>
+    <h3 class="section-title">
+      Reply Draft
+    </h3>
     <p class="section-description">
       Generate AI-powered reply drafts based on the current email context.
       Edit and refine before inserting into your reply.
