@@ -37,8 +37,11 @@ This file defines sub-agent roles, their responsibilities, and which spec files 
 - Web Crypto encryption service (`src/services/crypto.ts`)
 - Storage service (`src/services/storage.ts`) wrapping roamingSettings
 - `useChat()` composable for direct LLM streaming
+- `useMailbox()` composable for mailbox-specific Office.js operations
+- `useAuth()` composable for passphrase/key management
 - Pinia stores for auth, chat, settings state
 - Views: EmailAiView, AutomationView (Smart Actions), SettingsView
+- Automation components: BatchPanel, SearchPanel, FolderTree, RulesEditor
 - Shared components: ChatMessage, ProviderSelector, LoadingIndicator
 - VitePress documentation site
 - UI tests with mocked Office.js and MSW for LLM API mocking

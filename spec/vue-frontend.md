@@ -32,23 +32,22 @@ src/
 ├── composables/
 │   ├── useOffice.ts               # Office.js wrapper composable
 │   ├── useChat.ts                 # LLM streaming via fetch/ReadableStream
-│   ├── useSettings.ts             # roamingSettings persistence
-│   ├── useStorage.ts              # localStorage with auto-pruning
-│   └── useCrypto.ts               # Web Crypto API key encryption
+│   ├── useMailbox.ts              # Mailbox-specific Office.js operations
+│   ├── useAuth.ts                 # Passphrase/key management
+│   └── useSettings.ts             # roamingSettings persistence
 ├── services/
 │   ├── llm/
-│   │   ├── types.ts               # Shared LLM types (Message, StreamEvent, etc.)
-│   │   ├── base-client.ts         # Base fetch + streaming logic
-│   │   ├── claude-client.ts       # Anthropic Claude API client
-│   │   ├── openai-client.ts       # OpenAI API client
-│   │   ├── gemini-client.ts       # Google Gemini API client
-│   │   ├── minimax-client.ts      # MiniMax API client (Anthropic-compatible)
-│   │   └── provider-router.ts     # Routes to correct provider client
+│   │   ├── provider.ts            # Shared LLM types and interface
+│   │   ├── claude.ts              # Anthropic Claude API client
+│   │   ├── openai.ts              # OpenAI API client
+│   │   ├── gemini.ts              # Google Gemini API client
+│   │   ├── minimax.ts             # MiniMax API client (Anthropic-compatible)
+│   │   └── router.ts              # Routes to correct provider client
 │   ├── crypto.ts                  # AES-GCM encrypt/decrypt with Web Crypto API
-│   └── settings.ts                # roamingSettings read/write helpers
+│   └── storage.ts                 # roamingSettings + localStorage helpers
 ├── views/
 │   ├── EmailAiView.vue            # Tab 1
-│   ├── SmartActionsView.vue       # Tab 2
+│   ├── AutomationView.vue         # Tab 2 (Smart Actions)
 │   └── SettingsView.vue
 ├── components/
 │   ├── email-ai/
@@ -56,19 +55,19 @@ src/
 │   │   ├── SummaryView.vue
 │   │   ├── ReplyDraft.vue
 │   │   └── ExtractView.vue
-│   ├── smart-actions/
-│   │   ├── BatchCategorize.vue
-│   │   ├── BulkExtract.vue
-│   │   └── BulkDraftReply.vue
+│   ├── automation/
+│   │   ├── BatchPanel.vue
+│   │   ├── SearchPanel.vue
+│   │   ├── FolderTree.vue
+│   │   └── RulesEditor.vue
 │   ├── settings/
-│   │   ├── ProviderConfig.vue
-│   │   ├── ApiKeyManager.vue
-│   │   └── PassphraseSetup.vue
+│   │   └── ProviderConfig.vue
 │   └── shared/
 │       ├── ChatMessage.vue
 │       ├── ProviderSelector.vue
 │       └── LoadingIndicator.vue
 ├── stores/                        # Pinia stores
+│   ├── auth.ts
 │   ├── chat.ts
 │   └── settings.ts
 ├── types/
